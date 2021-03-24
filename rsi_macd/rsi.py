@@ -3,7 +3,7 @@ import pandas as pd
 import time
 
 
-coin_dic = {}
+
 
 
 while True:
