@@ -45,16 +45,16 @@ def find_krw_market():
                         word_2.append(a)
                 if "{" in word_2_str:
                     word_2_str.replace("{","")
-                # print(word_2_str , "   this is 2 ")
+                
                 
                 krw_list.append(word_2_str)
-                
+                print(word_2_str)
             word = []
             word_2 = []
             word_str = ""
             word_2_str = ""
         word_count += 1
         
+    return print(krw_list)
 
-    return krw_list
-
+find_krw_market()
