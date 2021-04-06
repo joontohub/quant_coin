@@ -18,7 +18,7 @@ while True:
     df = pd.DataFrame(data)
 
     df=df.reindex(index=df.index[::-1]).reset_index()
-
+    print(df)
     df['close']=df["trade_price"]
 
 

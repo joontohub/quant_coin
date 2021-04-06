@@ -23,12 +23,14 @@ def bollinger_bands(df, n):
     :param n: 
     :return: pandas.DataFrame
     """
-    MA = pd.Series(df['Close'].rolling(n, min_periods=n).mean())
-    MSD = pd.Series(df['Close'].rolling(n, min_periods=n).std())
+    MA = pd.Series(df['trade_price'].rolling(n, min_periods=n).mean())
+    MSD = pd.Series(df['trade_price'].rolling(n, min_periods=n).std())
     b1 = 4 * MSD / MA
     B1 = pd.Series(b1, name='BollingerB_' + str(n))
     df = df.join(B1)
-    b2 = (df['Close'] - MA + 2 * MSD) / (4 * MSD)
+    b2 = (df['trade_price'] - MA + 2 * MSD) / (4 * MSD)
     B2 = pd.Series(b2, name='Bollinger%b_' + str(n))
     df = df.join(B2)
+    print(df)
     return df
+bollinger_bands(df,20)

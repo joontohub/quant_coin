@@ -4,23 +4,26 @@ import requests
 
 url = "https://api.upbit.com/v1/candles/minutes/10"
 
-querystring = {"market":"KRW-BTC","count":"500"}
+querystring = {"market":"KRW-DAWN","count":"200"}
 
 response = requests.request("GET", url, params=querystring)
 
 data_json = response.json()
 
 data = pd.DataFrame(data_json) 
-data.columns = ['Open', 'High', "Low", "Close", "Volumn", "Adj"]
+data=data.reindex(index=data.index[::-1]).reset_index()
 
+#data.columns = ['Open', 'High', "Low", "Close", "Volumn", "Adj"]
+#'opening_price' 'high_price' , 'low_price', 'trade_price'
 def cal_dmi(data, n=14, n_ADX=14) :
     #https://github.com/Crypto-toolbox/pandas-technical-indicators/blob/master/technical_indicators.py : ADX 
     i = 0 
+    #print(data.loc[0,'trade_price'])
     UpI = [0] 
     DoI = [0] 
     while i + 1 <= data.index[-1] : 
-        UpMove = data.loc[i + 1, "High"] - data.loc[i, "High"] 
-        DoMove = data.loc[i, "Low"] - data.loc[i+1, "Low"] 
+        UpMove = data.loc[i + 1, "high_price"] - data.loc[i, "high_price"] 
+        DoMove = data.loc[i, "low_price"] - data.loc[i+1, "low_price"] 
         if UpMove > DoMove and UpMove > 0 : 
             UpD = UpMove 
         else : 
@@ -36,17 +39,22 @@ def cal_dmi(data, n=14, n_ADX=14) :
     i = 0 
     TR_l = [0] 
     while i < data.index[-1]: 
-        TR = max(data.loc[i + 1, 'High'], data.loc[i, 'Close']) - min(data.loc[i + 1, 'Low'], data.loc[i, 'Close']) 
+        TR = max(data.loc[i + 1, 'high_price'], data.loc[i, 'trade_price']) - min(data.loc[i + 1, 'low_price'], data.loc[i, 'trade_price']) 
         TR_l.append(TR) 
         i = i + 1 
-        TR_s = pd.Series(TR_l) 
-        ATR = pd.Series(TR_s.ewm(span=n, min_periods=1).mean()) 
-        UpI = pd.Series(UpI) 
-        DoI = pd.Series(DoI) 
-        PosDI = pd.Series(UpI.ewm(span=n, min_periods=1).mean() / ATR) 
-        NegDI = pd.Series(DoI.ewm(span=n, min_periods=1).mean() / ATR) 
-        ADX = pd.Series((abs(PosDI - NegDI) / (PosDI + NegDI)).ewm(span=n_ADX, min_periods=1).mean(), name='ADX_' + str(n) + '_' + str(n_ADX)) 
-        return PosDI, NegDI, ADX 
+    TR_s = pd.Series(TR_l) 
+    ATR = pd.Series(TR_s.ewm(span=n, min_periods=1).mean()) 
+    UpI = pd.Series(UpI) 
+    DoI = pd.Series(DoI) 
+    PosDI = pd.Series(UpI.ewm(span=n, min_periods=1).mean() / ATR) 
+    NegDI = pd.Series(DoI.ewm(span=n, min_periods=1).mean() / ATR) 
+    ADX = pd.Series((abs(PosDI - NegDI) / (PosDI + NegDI)).ewm(span=n_ADX, min_periods=1).mean(), name='ADX_' + str(n) + '_' + str(n_ADX)) 
+    return PosDI, NegDI, ADX 
         
-        data["PDI"],data["MDI"],data["ADX"] = cal_dmi(data)
+data["PDI"],data["MDI"],data["ADX"] = cal_dmi(data)
+
+print(querystring)
+print("this is PDI", data["PDI"].iloc[-1])
+print("this is MDI", data['MDI'].iloc[-1])
+print("this is ADX", data['ADX'].iloc[-1])
 
