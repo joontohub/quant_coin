@@ -1,10 +1,10 @@
 import pandas as pd 
 import numpy as np 
 import requests
-
+import time
 url = "https://api.upbit.com/v1/candles/minutes/10"
 
-querystring = {"market":"KRW-DAWN","count":"200"}
+querystring = {"market":"KRW-MED","count":"200"}
 
 response = requests.request("GET", url, params=querystring)
 
@@ -50,11 +50,20 @@ def cal_dmi(data, n=14, n_ADX=14) :
     NegDI = pd.Series(DoI.ewm(span=n, min_periods=1).mean() / ATR) 
     ADX = pd.Series((abs(PosDI - NegDI) / (PosDI + NegDI)).ewm(span=n_ADX, min_periods=1).mean(), name='ADX_' + str(n) + '_' + str(n_ADX)) 
     return PosDI, NegDI, ADX 
-        
-data["PDI"],data["MDI"],data["ADX"] = cal_dmi(data)
 
-print(querystring)
-print("this is PDI", data["PDI"].iloc[-1])
-print("this is MDI", data['MDI'].iloc[-1])
-print("this is ADX", data['ADX'].iloc[-1])
 
+data["PDI"],data["MDI"],data["ADX"] = cal_dmi(data, n=27,n_ADX=27)
+
+pdi = data["PDI"].iloc[-1]
+pdi = float(pdi) * 100
+mdi = data["MDI"].iloc[-1]
+mdi = float(mdi) * 100
+adx = data["ADX"].iloc[-1]
+adx = float(adx) * 100
+
+print("this is PDI", pdi)
+print("this is MDI", mdi)
+print("this is ADX", adx)
+time.sleep(1)
+
+    # 27 일때 같은 값 나옴.
