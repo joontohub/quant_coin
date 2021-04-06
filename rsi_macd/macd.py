@@ -4,9 +4,9 @@ import time
 
 
 while True:
-   url = "https://api.upbit.com/v1/candles/minutes/1"
+   url = "https://api.upbit.com/v1/candles/minutes/10"
 
-   querystring = {"market":"KRW-XRP","count":"100"}
+   querystring = {"market":"KRW-XRP","count":"200"}
 
    response = requests.request("GET", url, params=querystring)
 
