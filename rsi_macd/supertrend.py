@@ -1,5 +1,19 @@
 import numpy as np
 import pandas as pd
+import requests
+import time
+
+url = "https://api.upbit.com/v1/candles/minutes/1"
+
+querystring = {"market":"KRW-XRP","count":"100"}
+
+response = requests.request("GET", url, params=querystring)
+
+data = response.json()
+
+df = pd.DataFrame(data)
+
+df=df.iloc[::-1]
 
 
 """
@@ -35,6 +49,10 @@ Usage :
 
 # I need to change 'date', 'open', 'high', 'low', 'close', 'volume' column
 
+df['close']=df["trade_price"]
+df['open'] = df['opening_price']
+df['high'] = df['high_price']
+df['low'] = df['low_price']
 
 
 def EMA(df, base, target, period, alpha=False):
@@ -169,4 +187,7 @@ def SuperTrend(df, period, multiplier, ohlc=['Open', 'High', 'Low', 'Close']):
     
     df.fillna(0, inplace=True)
 
+    print(df)
     return df
+
+SuperTrend(df, 10, 3)
