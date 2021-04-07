@@ -49,10 +49,10 @@ Usage :
 
 # I need to change 'date', 'open', 'high', 'low', 'close', 'volume' column
 
-df['close']=df["trade_price"]
-df['open'] = df['opening_price']
-df['high'] = df['high_price']
-df['low'] = df['low_price']
+df['Close']=df["trade_price"]
+df['Open'] = df['opening_price']
+df['High'] = df['high_price']
+df['Low'] = df['low_price']
 
 
 def EMA(df, base, target, period, alpha=False):
@@ -187,7 +187,7 @@ def SuperTrend(df, period, multiplier, ohlc=['Open', 'High', 'Low', 'Close']):
     
     df.fillna(0, inplace=True)
 
-    print(df)
+    print(df[stx])
     return df
 
 SuperTrend(df, 10, 3)
