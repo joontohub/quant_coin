@@ -48,13 +48,10 @@ def find_krw_market():
                 
                 
                 krw_list.append(word_2_str)
-                print(word_2_str)
             word = []
             word_2 = []
             word_str = ""
             word_2_str = ""
         word_count += 1
-        
-    return print(krw_list)
-
-find_krw_market()
+    del krw_list[0]
+    return (krw_list)

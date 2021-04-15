@@ -4,7 +4,7 @@ import requests
 import time
 url = "https://api.upbit.com/v1/candles/minutes/10"
 
-querystring = {"market":"KRW-MED","count":"200"}
+querystring = {"market":"KRW-MFT","count":"200"}
 
 response = requests.request("GET", url, params=querystring)
 

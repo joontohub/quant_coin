@@ -9,7 +9,7 @@ import time
 while True:
     url = "https://api.upbit.com/v1/candles/minutes/10"
 
-    querystring = {"market":"KRW-BTC","count":"500"}
+    querystring = {"market":"KRW-EOS","count":"500"}
 
     response = requests.request("GET", url, params=querystring)
 
